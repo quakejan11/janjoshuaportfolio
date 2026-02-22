@@ -1,0 +1,13 @@
+.terminal-indent {
+  padding-left: 1.5rem;
+}
+
+.terminal-prompt {
+  color: #4ade80;
+  font-weight: bold;
+}
+
+.terminal-output {
+  padding-left: 2rem;
+  color: #86efac;
+}
