@@ -7,14 +7,17 @@ export const useTerminal = (initialLines) => {
   const terminalEndRef = useRef(null);
 
   const runCommand = (cmd) => {
-    if (cmd === "clear") {
+    // Convert command to lowercase for case-insensitive comparison
+    const lowerCmd = cmd.toLowerCase();
+    
+    if (lowerCmd === "clear") {
       setLines([]);
       return;
     }
 
-    // Handle project commands
-    if (cmd.startsWith('project ')) {
-      const projectId = cmd.split(' ')[1];
+    // Handle project commands (case-insensitive)
+    if (lowerCmd.startsWith('project ')) {
+      const projectId = cmd.split(' ')[1]; // Keep original for display
       if (['1', '2', '3', '4', '5'].includes(projectId)) {
         window.open(`/project/${projectId}`, '_blank');
         setLines((prev) => [...prev, `📂 Opening project ${projectId} in new tab...`]);
@@ -25,12 +28,12 @@ export const useTerminal = (initialLines) => {
       }
     }
 
-    // Handle CV download
-    if (cmd === "cv") {
+    // Handle CV download (case-insensitive)
+    if (lowerCmd === "cv") {
       // Trigger download
       const link = document.createElement('a');
-      link.href = '/Jan_Joshua_Bongo_CV.pdf'; // make sure this file exists in public folder
-      link.download = 'Jan_Joshua_Bongo_CV.pdf'; // suggested filename for download
+      link.href = '/Jan_Joshua_Bongo_CV.pdf';
+      link.download = 'Jan_Joshua_Bongo_CV.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -44,9 +47,14 @@ export const useTerminal = (initialLines) => {
       return;
     }
 
-    // General command lookup
-    if (commands[cmd]) {
-      setLines((prev) => [...prev, ...commands[cmd]]);
+    // General command lookup - check against lowercase version
+    // Find the original command key that matches (case-insensitive)
+    const matchedCommandKey = Object.keys(commands).find(
+      key => key.toLowerCase() === lowerCmd
+    );
+    
+    if (matchedCommandKey) {
+      setLines((prev) => [...prev, ...commands[matchedCommandKey]]);
     } else {
       setLines((prev) => [...prev, "command not found"]);
     }
